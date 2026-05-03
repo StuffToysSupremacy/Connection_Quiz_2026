@@ -1,19 +1,15 @@
-from tkinter import *
 import csv
 import random
+from tkinter import *
 from functools import partial # To prevent unwanted windows
 
-from Connection_Quiz.C_03_get_all_words_v1 import word_given
-
-
-#  helper functions go here
-def get_words():
+# helper functions go here
+def get_word():
     """
     Retrieves words from csv file
     :return: list of words which each list item has the
     4 words and a word where the 4 words can be connected to form another word
     """
-
     # Retrieve words from csv file and put them in a list
     file = open("connections_quiz(Questions).csv", "r")
     all_words = list(csv.reader(file, delimiter=","))
@@ -24,16 +20,15 @@ def get_words():
 
     return all_words
 
-def get_word_option():
+def get_round_colours():
     """
     Choose four colours from larger list ensuring that the results are all different.
     :return: list of words and given word (connecting the words)
     """
-    all_words_list = get_words()
+    all_words_list = get_word()
 
     four_words = []
-    word_option = []
-
+    four_answer = []
     word_given = []
 
     # Loop until we have four words with different connections
@@ -41,25 +36,22 @@ def get_word_option():
         potential_words = random.choice(all_words_list)
 
         # Get the words combination and check it's not all duplicate
-        if potential_words[1] not in word_option:
-            four_words.append(potential_words[4])
-            word_option.append(potential_words[0])
-            
-            # get the given word from the four chosen word
+        if potential_words[1] not in four_answer:
+            four_words.append(potential_words)
+            four_answer.append(potential_words[0])
+
             word_given = random.choice(four_words)
 
     word_index = four_words.index(word_given)
-    connected_answer = word_option[word_index]
+    connected_answer = four_answer[word_index]
 
+    print(four_words)
+    print(four_answer)
 
-    # print(four_words)
-    # print(word_option)
-    #
-    # print(f"The word = {word_given} \n"
-    #       f"the answer = {connected_answer}")
-    
-    return word_option, connected_answer, word_given
+    print("Word", word_given)
+    print("Answer", connected_answer)
 
+    return four_words, connected_answer
 
 
 class StartQuiz:
@@ -98,19 +90,11 @@ class Quiz:
 
     def __init__(self, how_many):
 
+        # String Variables
         self.target_word = StringVar()
-        
-        # questions done starts at zero
-        self.questions_done = IntVar()
-        self.questions_done.set(0)
-        
-        self.num_of_question = IntVar()
-        self.num_of_question.set(how_many)
 
-        # word lists and result list
-        self.word_question_list = []
-        self.all_result_list = []
-        self.all_answer_list =  []
+        # questions done - start with zero
+        self.questions_done = IntVar()
 
         self.quiz_box = Toplevel()
 
@@ -123,7 +107,7 @@ class Quiz:
         # list for label details (text | font | background | row)
         quiz_labels_list = [
             ["Question # of #", ("Arial", 16, "bold"), "#C09CD2", 0 ],
-            [f"The word given: #", body_font, "#D0CEE2", 1],
+            ["The word given: #", body_font, "#D0CEE2", 1],
             ["Choose the correct word. Good luck!", body_font, "#B4E8B4", 2],
             ["-" * 60, body_font, "#C09CD2", 3],
             ["Your answer was...(result)", body_font, "#71EB5F", 5]
@@ -140,26 +124,20 @@ class Quiz:
 
         # Retrieve Labels so they can be configured later
         self.heading_label = quiz_labels_ref[0]
-        self.word_given_label = quiz_labels_ref[1]
+        self.given_word_label = quiz_labels_ref[1]
         self.results_label = quiz_labels_ref[3]
 
         # set up word buttons...
         self.word_frame = Frame(self.quiz_frame, bg="#C09CD4")
         self.word_frame.grid(row=4)
 
-        self.word_button_ref = []
-        
         # create four buttons in a 2 x 2 grid
         for item in range(0, 4):
             self.word_button = Button(self.word_frame, font=("Arial", 12),
-                                        text="Word ", width=15,
-                                      command=partial(self.question_result, item))
+                                        text="Word ", width=15)
             self.word_button.grid(row=item // 2,
                                     column=item % 2,
                                     padx=5, pady=5)
-
-            # self.word_button.config(bg="#72BDFF")
-            self.word_button_ref.append(self.word_button)
 
         # Frame to hold hints and stats buttons
         self.hints_stats_frame = Frame(self.quiz_frame, bg="#C09CD2")
@@ -183,95 +161,11 @@ class Quiz:
 
             control_ref_list.append(make_control_button)
 
-        self.next_button = control_ref_list[0]
-        self.stats_button = control_ref_list[2]
-        self.end_quiz_button = control_ref_list[3]
-
-        # Once interface has been created, invoke new
-        # question function for first question
-        self.new_question()
-        
-    def new_question(self):
-        """
-        Chooses four words, pick one out of four words,
-        works out which word has a connection to it.
-        """
-        
-        # Retrieve number of questions done, add one to it and configure heading
-        questions_done = self.questions_done.get()
-        questions_done += 1
-        self.questions_done.set(questions_done)
-
-        num_of_question = self.num_of_question.get()
-
-        # get the words for question and the answer
-        self.word_question_list, connected_answer = get_word_option()
-
-        # Set target word as connected answer (for later comparison)
-        self.target_word.set(connected_answer)
-
-        # Update heading and given word label
-        self.heading_label.config(text=f"Question {questions_done} of {num_of_question}")
-        self.word_given_label.config(text=f"Given Word: {word_given}",
-                                     font=("Arial", 14, "bold"))
-        self.results_label.config(text=f"{'-' * 20}", bg="#F0F0F0")
-
-        # Configure buttons using foreground and background colours from list
-        # enable colour buttons (disabled at the end of the last round
-        for count, item in enumerate(self.word_button_ref):
-            item.config(text=self.word_question_list[count][4], state=NORMAL)
-
-        self.next_button.config(state=DISABLED)
-
-    def question_result(self, user_choice):
-        """
-        Retrieve which button was pushed (index 0-3), retrieves
-        connected answer and then compare it with answer, updates result,
-        and adds result to stats list.
-        """
-
-        # Get user answer word based on button pressed...
-        result = int(self.word_question_list[user_choice][1])
-
-        # alternate way to get button name. Good for if buttons have been scrambled!
-        word_chosen = self.word_button_ref[user_choice].cget('text')
-
-        # retrieve connected_answer and compare with user choice to find round result
-        answer = self.target_word.get()
-        self.all_answer_list.append(word_chosen)
-
-        if result == answer:
-            result_text = f"Success! {word_given} is connected to {result} :D"
-            result_bg = "#71EB5F"
-            self.all_result_list.append(result)
-
-        else:
-            result_text = f"Oops {word_chosen} is not the right answer D:"
-            result_bg = "#FF9992"
-            self.all_result_list.append(0)
-
-        self.results_label.config(text=result_text, bg=result_bg)
-
-        # enable stats & next buttons, disable word buttons
-        self.next_button.config(state=NORMAL)
-        self.stats_button.config(state=NORMAL)
-
-        # check to see if quiz is over
-        questions_done = self.questions_done.get()
-        num_of_question = self.num_of_question.get()
-
-        if questions_done == num_of_question:
-            self.next_button.config(state=DISABLED, text="End of Quiz")
-            self.end_quiz_button.config(text="Start Again", bg="#72BDFF")
-
-        for item in self.word_button_ref:
-            item.config(state=DISABLED)
-
 
     def close_quiz(self):
         # reshow root (ie: choose questions) and end current
         # quiz / allow new quiz to start
-        root.destroy()
+        root.deiconify()
         self.quiz_box.destroy()
 
 
