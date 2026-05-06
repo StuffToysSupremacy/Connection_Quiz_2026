@@ -52,7 +52,7 @@ def get_qn_words():
     print("Word", word_given)
     print("Answer", connected_answer)
 
-    return four_words, connected_answer, word_given
+    return four_answer, connected_answer, word_given
 
 
 class StartQuiz:
@@ -115,7 +115,7 @@ class Quiz:
 
         # list for label details (text | font | background | row)
         quiz_labels_list = [
-            ["Question # of #", ("Arial", 16, "bold"), None, 0 ],
+            ["Question # of #", ("Arial", 16, "bold"), "#C09CD2", 0 ],
             ["The word given: #", body_font, "#D0CEE2", 1],
             ["Choose the correct word. Good luck!", body_font, "#B4E8B4", 2],
             ["-" * 60, body_font, "#C09CD2", 3],
@@ -147,8 +147,8 @@ class Quiz:
         # create four buttons in a 2 x 2 grid
         for item in range(0, 4):
             self.word_button = Button(self.word_frame, font=("Arial", 12),
-                                        text="Word ", width=15)
-                                      # command=partial(self.question_results, item))
+                                        text="Word", width=15,
+                                      command=partial(self.question_result, item))
             self.word_button.grid(row=item // 2,
                                     column=item % 2,
                                     padx=5, pady=5)
@@ -199,8 +199,8 @@ class Quiz:
 
         questions_wanted = self.questions_wanted.get()
 
-        # Get qn_word, word_given, and  connected answer...
-        self.qn_words_list, word_given, connected_answer = get_qn_words()
+        # Get qn_word,  connected answer, and word_given...
+        self.qn_words_list, connected_answer, word_given = get_qn_words()
 
         # Set the given word as word_given
         self.target_word.set(connected_answer)
@@ -214,7 +214,7 @@ class Quiz:
         # Configure buttons using foreground and background colours from list
         # enable colour buttons (disabled at the end of the last round
         for count, item in enumerate(self.word_button_ref):
-            item.config(text=self.qn_words_list[count][4], state=NORMAL)
+            item.config(text=self.qn_words_list[count][0], state=NORMAL)
 
         self.next_button.config(state=DISABLED)
 
@@ -224,8 +224,8 @@ class Quiz:
         answer and then compare it with connected_answer, updates result,
         and adds result to stats list.
         """
-        # Get qn_word, word_given, and  connected answer...
-        self.qn_words_list, word_given, connected_answer = get_qn_words()
+        # Get qn_word,  connected answer, and word_given...
+        self.qn_words_list, connected_answer, word_given = get_qn_words()
 
         # Get user answer word based on button pressed...
         # result = int(self.qn_words_list[user_choice][1])
@@ -238,7 +238,7 @@ class Quiz:
         self.all_answer_list.append(word_chosen)
 
         if word_chosen == answer:
-            result_text = f"Success! {word_chosen} is connected to {word_given} :D"
+            result_text = f"Success! {word_chosen} is connected to {connected_answer} :D"
             result_bg = "#71EB5F"
             self.all_result_list.append(word_chosen)
 
