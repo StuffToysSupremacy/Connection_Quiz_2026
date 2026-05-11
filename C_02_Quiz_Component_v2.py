@@ -214,9 +214,11 @@ class Quiz:
         # Configure buttons using foreground and background colours from list
         # enable colour buttons (disabled at the end of the last round
         for count, item in enumerate(self.word_button_ref):
-            item.config(text=self.qn_words_list[count][0], state=NORMAL)
+            item.config(text=self.qn_words_list[count], state=NORMAL)
+
 
         self.next_button.config(state=DISABLED)
+
 
     def question_result(self, user_choice):
         """
@@ -224,11 +226,6 @@ class Quiz:
         answer and then compare it with connected_answer, updates result,
         and adds result to stats list.
         """
-        # Get qn_word,  connected answer, and word_given...
-        self.qn_words_list, connected_answer, word_given = get_qn_words()
-
-        # Get user answer word based on button pressed...
-        # result = int(self.qn_words_list[user_choice][1])
 
         # alternate way to get button name. Good for if buttons have been scrambled!
         word_chosen = self.word_button_ref[user_choice].cget('text')
@@ -238,12 +235,12 @@ class Quiz:
         self.all_answer_list.append(word_chosen)
 
         if word_chosen == answer:
-            result_text = f"Success! {word_chosen} is connected to {connected_answer} :D"
+            result_text = f"Success! {word_chosen} is the correct answer :D"
             result_bg = "#71EB5F"
             self.all_result_list.append(word_chosen)
 
         else:
-            result_text = f"Oops {word_chosen} is not the right answer D: It was {connected_answer}"
+            result_text = f"Oops {word_chosen} is not the right answer D:"
             result_bg = "#FF9992"
             self.all_result_list.append(0)
 
