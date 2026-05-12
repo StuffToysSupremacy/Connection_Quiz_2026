@@ -3,6 +3,7 @@ import random
 from tkinter import *
 from functools import partial # To prevent unwanted windows
 
+
 # helper functions go here
 def get_word():
     """
@@ -10,6 +11,7 @@ def get_word():
     :return: list of words which each list item has the
     4 words and a word where the 4 words can be connected to form another word
     """
+
     # Retrieve words from csv file and put them in a list
     file = open("connections_quiz(Questions).csv", "r")
     all_words = list(csv.reader(file, delimiter=","))
@@ -19,6 +21,7 @@ def get_word():
     all_words.pop(0)
 
     return all_words
+
 
 def get_qn_words():
     """
@@ -43,6 +46,7 @@ def get_qn_words():
 
             word_given = random.choice(four_words)
 
+    # find the position of the selected item
     word_index = four_words.index(word_given)
     connected_answer = four_answer[word_index]
 
@@ -133,8 +137,6 @@ class Quiz:
 
         # Retrieve Labels so they can be configured later
         self.heading_label = quiz_labels_ref[0]
-        print("head label", self.heading_label)
-
         self.given_word_label = quiz_labels_ref[1]
         self.results_label = quiz_labels_ref[3]
 
@@ -161,7 +163,7 @@ class Quiz:
 
         # List for buttons ( frame | text | bg | command | width | row | column )
         control_button_list = [
-            [self.quiz_frame, "Next Question", "#FAF4AB", "", 21, 6, None],
+            [self.quiz_frame, "Next Question", "#FAF4AB", self.new_question, 21, 6, None],
             [self.hints_stats_frame, 'Hints',"#FAD7AC", "", 10, 7, 0],
             [self.hints_stats_frame, "Stats","#B1DDF0", "", 10, 7, 1],
             [self.quiz_frame, "End", "#FAD9D5", self.close_quiz,21, 8, None],
@@ -209,7 +211,7 @@ class Quiz:
         self.heading_label.config(text=f"Question {questions_done} of {questions_wanted}")
         self.given_word_label.config(text=f"Given Word: {word_given}",
                                      font=("Arial", 14, "bold"))
-        self.results_label.config(text=f"{'-' * 20}", bg="#F0F0F0")
+        self.results_label.config(text=f"{'-' * 30}", bg="#F0F0F0")
 
         # Configure buttons using foreground and background colours from list
         # enable colour buttons (disabled at the end of the last round
@@ -227,7 +229,7 @@ class Quiz:
         and adds result to stats list.
         """
 
-        # alternate way to get button name. Good for if buttons have been scrambled!
+        # way to get button name. Good for if buttons have been scrambled!
         word_chosen = self.word_button_ref[user_choice].cget('text')
 
         # retrieve connected_answer and compare with user choice to find round result
