@@ -123,7 +123,7 @@ class Quiz:
             ["The word given: #", body_font, "#D0CEE2", 1],
             ["Choose the correct word. Good luck!", body_font, "#B4E8B4", 2],
             ["-" * 60, body_font, "#C09CD2", 3],
-            ["Your answer was...(result)", body_font, "#71EB5F", 5]
+            ["Your answer was...(result)", body_font, "#C09CD2", 5]
 
         ]
         
@@ -138,7 +138,7 @@ class Quiz:
         # Retrieve Labels so they can be configured later
         self.heading_label = quiz_labels_ref[0]
         self.given_word_label = quiz_labels_ref[1]
-        self.results_label = quiz_labels_ref[3]
+        self.results_label = quiz_labels_ref[4]
 
         # set up word buttons...
         self.word_frame = Frame(self.quiz_frame, bg="#C09CD4")
@@ -211,7 +211,7 @@ class Quiz:
         self.heading_label.config(text=f"Question {questions_done} of {questions_wanted}")
         self.given_word_label.config(text=f"Given Word: {word_given}",
                                      font=("Arial", 14, "bold"))
-        self.results_label.config(text=f"{'-' * 30}", bg="#F0F0F0")
+        self.results_label.config(text=f"{'-' * 60}", bg="#C09CD2")
 
         # Configure buttons using foreground and background colours from list
         # enable colour buttons (disabled at the end of the last round
