@@ -50,7 +50,7 @@ class Quiz:
         self.quiz_frame = Frame(self.quiz_box, bg="#C09CD2")
         self.quiz_frame.grid(padx=10, pady=10)
 
-        self.quiz_heading_label = Label(self.quiz_frame, text=f"Question 0 of {how_many}",
+        self.quiz_heading_label = Label(self.quiz_frame, text=f"Connection Quiz",
                                         font=("Arial", 16, "bold"), bg="#C09CD2",
                                         padx=5, pady=5)
         self.quiz_heading_label.grid(row=0)
@@ -96,10 +96,11 @@ class DisplayHints:
         self.hints_heading_label.grid(row=0)
 
         hints_text = ("The connection between the given word and "
-                      "the answer is that they are one word\n\n"
-                      "The answer can either be before the given word\n"
+                      "the answer is that they are one word.\n\n"
+                      "The answer can either be before the given word"
                       "or after the given word. \n\n"
-                      "____(given word)  or  (given word)____ \n\n"
+                      "E.g:\n"
+                      "          ____(given word)  or  (given word)____ \n\n"
                       "Good Luck!")
         self.hints_text_label = Label(self.hints_frame,
                                       text=hints_text, wraplength=350,
