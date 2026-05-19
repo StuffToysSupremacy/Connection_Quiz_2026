@@ -107,7 +107,7 @@ class Quiz:
 
         self.qn_words_list = []
         self.all_result_list = []
-        self.all_answer_list = []
+        self.highest_result_list = []
 
         self.quiz_box = Toplevel()
 
@@ -234,7 +234,7 @@ class Quiz:
 
         # retrieve connected_answer and compare with user choice to find round result
         answer = self.target_word.get()
-        self.all_answer_list.append(word_chosen)
+        self.all_result_list.append(word_chosen)
 
         if word_chosen == answer:
             result_text = f"Success! {word_chosen} is the correct answer :D"
