@@ -45,16 +45,16 @@ class Quiz:
     """
 
     def __init__(self, how_many):
-        self.qns_passed = StringVar()
+        self.qns_passed = IntVar()
 
         # Lists for stats component
         # 1 = pass
         # 0 = fail
 
         # Highest Result Test Data...
-        self.all_result_list = [1,1,1,1,1]
-        self.highest_result_list = [1,1,1,1,1]
-        self.qns_passed.set(5)
+        # self.all_result_list = [1,1,1,1,1]
+        # self.highest_result_list = [1,1,1,1,1]
+        # self.qns_passed.set(5)
 
         # # Lowest Result Test Data...
         # self.all_result_list = [0,0,0,0,0]
@@ -62,9 +62,9 @@ class Quiz:
         # self.qns_passed.set(0)
 
         # # Random Result Test Data...
-        # self.all_result_list = [1,0,1,0,1]
-        # self.highest_result_list = [1,1,1,1,1]
-        # self.qns_passed.set(3)
+        self.all_result_list = [1,0,1,0,1]
+        self.highest_result_list = [1,1,1,1,1]
+        self.qns_passed.set(3)
 
         self.quiz_box = Toplevel()
 
@@ -119,7 +119,7 @@ class Stats:
         # 'releases' stats button
         self.stats_box.protocol('WM_DELETE_WINDOW',
                                 partial(self.close_stats, partner))
-        self.stats_frame = Frame(self.stats_box, width=350)
+        self.stats_frame = Frame(self.stats_box, width=350, bg="#B1DDF0")
         self.stats_frame.grid()
 
         # Math to populate Stats dialogue...
@@ -127,16 +127,17 @@ class Stats:
 
         success_rate = qns_passed / questions_done * 100
         highest_result = sum(high_results)
-        average_result = questions_done / questions_done
+        average_result = qns_passed / questions_done
 
         # Strings for Stats labels...
         success_string = f"Success Rate: {qns_passed} / {questions_done} "
         accuracy_string = f"Accuracy: {success_rate:.0f}%"
         highest_result = f" Highest Result {highest_result}"
 
+
         # custom comment text and formatting
-        if questions_done == highest_result:
-            comment_string =  ("Excellent!! You got the highest result possible!")
+        if qns_passed == questions_done:
+            comment_string = "Excellent!! You got the highest result possible!"
             comment_colour = "#71EB5F"
 
         elif qns_passed == 0:
@@ -150,34 +151,43 @@ class Stats:
 
         average_result_string = f"Average Result: {average_result:.0f}\n"
 
+        bg = "#B1DDF0"
+
         heading_font = ("Arial", 16, "bold")
         normal_font = ("Arial", 14)
         comment_font = ("Arial", 13)
 
-        # Label list (text | font | 'Sticky') "W" is west or left aligned if "" its centered
+        # Label list (text | font | bg | 'Sticky') "W" is west or left aligned if "" its centered
         all_stats_string = [
-            ["Statistics", heading_font, ""],
-            [success_string, normal_font, "W"],
-            [accuracy_string, normal_font, "W"],
-            [comment_string, comment_font, "W"],
-            ["\nQuiz Stats", heading_font, ""],
-            [highest_result, normal_font, "W"],
-            [average_result_string, normal_font, "W"]
+            ["Statistics", heading_font, bg, ""],
+            [success_string, normal_font, bg, "W"],
+            [accuracy_string, normal_font, bg, "W"],
+            [comment_string, comment_font, bg, "W"],
+            ["\nQuestion Results", heading_font, bg, ""],
+            [highest_result, normal_font, bg, "W"],
+            [average_result_string, normal_font, bg, "W"]
         ]
 
         stats_label_ref_list = []
         for count, item in enumerate(all_stats_string):
             self.stats_label = Label(self.stats_frame, text=item[0], font=item[1],
-                                     anchor="w", justify="left",
+                                     anchor="w", justify="left",bg=item[2],
                                      padx=30, pady=5)
-            self.stats_label.grid(row=count, sticky=item[2], padx=10)
+            self.stats_label.grid(row=count, sticky=item[3], padx=10)
             stats_label_ref_list.append(self.stats_label)
 
-            # Configure comment label background (for all won / all lost)
-            stats_comment_label = stats_label_ref_list[4]
-            stats_comment_label.config(bg=comment_colour)
+        # Configure comment label background (for all won / all lost)
+        stats_comment_label = stats_label_ref_list[3]
+        stats_comment_label.config(bg=comment_colour)
 
-            
+        self.dismiss_button = Button(self.stats_frame,
+                                     font=("Arial", 16, "bold"),
+                                     text="Dismiss", bg="#3774DE",
+                                     fg="#000000", width=30,
+                                     command=partial(self.close_stats, partner))
+        self.dismiss_button.grid(row=7, padx=10, pady=10)
+
+        # closes stats dialogue (used by button and x at top of dialogue)
 
     def close_stats(self, partner):
             """
