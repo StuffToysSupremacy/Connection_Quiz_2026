@@ -62,7 +62,7 @@ class Quiz:
         # self.qns_passed.set(0)
 
         # # Random Result Test Data...
-        self.all_result_list = [1,0,1,0,1]
+        self.all_result_list = [1,1,1,0,0]
         self.highest_result_list = [1,1,1,1,1]
         self.qns_passed.set(3)
 
@@ -105,7 +105,7 @@ class Stats:
         # Extract information from master list...
         qns_passed = all_stats_info[0]
         user_result = all_stats_info[1]
-        high_results = all_stats_info[2]
+        high_result = all_stats_info[2]
 
         # sort user results to find high score...
         user_result.sort()
@@ -122,17 +122,17 @@ class Stats:
         self.stats_frame = Frame(self.stats_box, width=350, bg="#B1DDF0")
         self.stats_frame.grid()
 
+
         # Math to populate Stats dialogue...
         questions_done = len(user_result)
-
         success_rate = qns_passed / questions_done * 100
-        highest_result = sum(high_results)
-        average_result = qns_passed / questions_done
+
+
 
         # Strings for Stats labels...
         success_string = f"Success Rate: {qns_passed} / {questions_done} "
         accuracy_string = f"Accuracy: {success_rate:.0f}%"
-        highest_result = f" Highest Result {highest_result}"
+
 
 
         # custom comment text and formatting
@@ -149,8 +149,6 @@ class Stats:
             comment_string = ""
             comment_colour = "#B1DDF0"
 
-        average_result_string = f"Average Result: {average_result:.0f}\n"
-
         bg = "#B1DDF0"
 
         heading_font = ("Arial", 16, "bold")
@@ -162,10 +160,7 @@ class Stats:
             ["Statistics", heading_font, bg, ""],
             [success_string, normal_font, bg, "W"],
             [accuracy_string, normal_font, bg, "W"],
-            [comment_string, comment_font, bg, "W"],
-            ["\nQuestion Results", heading_font, bg, ""],
-            [highest_result, normal_font, bg, "W"],
-            [average_result_string, normal_font, bg, "W"]
+            [comment_string, comment_font, bg, "W"]
         ]
 
         stats_label_ref_list = []
