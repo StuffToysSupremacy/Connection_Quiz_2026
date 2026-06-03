@@ -320,15 +320,19 @@ class Quiz:
             qns_passed += 1
             self.qns_passed.set(qns_passed)
 
+            # Gets the current streak and adds 1 when user got it right
             current_streak = self.current_streak.get()
             current_streak += 1
             self.current_streak.set(current_streak)
+
 
         else:
             result_text = f"Oops {word_chosen} is not the right answer D:"
             result_bg = "#FF9992"
             self.all_result_list.append("0")
+            # resets current streak back to zero when user got it wrong
             self.current_streak.set(0)
+
 
         self.results_label.config(text=result_text, bg=result_bg)
 
@@ -455,7 +459,7 @@ class Stats:
         user_result = all_stats_info[1]
         high_results = all_stats_info[2]
         longest_streak = all_stats_info[3]
-        current_steak = all_stats_info[4]
+        current_streak = all_stats_info[4]
 
         self.stats_box = Toplevel()
 
@@ -485,7 +489,9 @@ class Stats:
         # Strings for Stats labels...
         success_string = f"Success Rate: {qns_passed} / {questions_done} "
         accuracy_string = f"Accuracy: {success_rate:.0f}%"
-        current_streak_string = f"Current Streak: {current_steak}"
+        current_streak_string = f"Current Streak: {current_streak}"
+
+        print(f"Current Streak :{current_streak}")
 
 
         # custom comment text and formatting
