@@ -40,7 +40,7 @@ def get_qn_words():
         potential_words = random.choice(all_words_list)
 
         # Get the words combination and check it's not all duplicate
-        if potential_words[1] not in four_answer:
+        if potential_words[0] not in four_answer:
             four_words.append(potential_words[4])
             four_answer.append(potential_words[0])
 
@@ -140,10 +140,15 @@ class StartQuiz():
             try:
                 questions_wanted = int(questions_wanted)
                 if questions_wanted > 0:
+                    # Clear entry box and reset instruction label so
+                    # that when users start a new quiz, they don't see an error message.
+                    self.num_question_entry.delete(0, END)
+                    self.choose_label.config(text="How many questions would you like to do?")
                     # Invoke Quiz Class (and take across number of rounds)
                     Quiz(questions_wanted)
                     # Hide root window (ie: hide question choice window)
                     root.withdraw()
+
                 else:
                     has_errors = "yes"
 
@@ -179,6 +184,7 @@ class Quiz:
         self.longest_streak = IntVar()
         self.current_streak = IntVar()
 
+
         self.qn_words_list = []
         self.all_result_list = []
         self.highest_result_list = []
@@ -187,6 +193,9 @@ class Quiz:
 
         self.quiz_frame = Frame(self.quiz_box, padx=10, pady=10, bg="#C09CD2")
         self.quiz_frame.grid()
+
+        # If users press the 'x' on the quiz window, end the entire quiz!
+        self.quiz_box.protocol('WM_DELETE_WINDOW', root.destroy)
 
         # body font for most labels...
         body_font = ("Arial", 12)
@@ -212,6 +221,7 @@ class Quiz:
         # Retrieve Labels so they can be configured later
         self.heading_label = quiz_labels_ref[0]
         self.given_word_label = quiz_labels_ref[1]
+        self.choose_label = quiz_labels_ref[2]
         self.results_label = quiz_labels_ref[4]
 
         # set up word buttons...
@@ -255,9 +265,11 @@ class Quiz:
 
         # Retrieve next, stats and end button so that they can be configured
         self.next_button = control_ref_list[0]
-        self.to_hints_button = control_ref_list[2]
+        self.to_hints_button = control_ref_list[1]
         self.to_stats_button = control_ref_list[2]
         self.end_quiz_button = control_ref_list[3]
+
+        self.to_stats_button.config(state=DISABLED)
 
         # Once interface has been created, invoke new
         # question function for first question
@@ -271,7 +283,6 @@ class Quiz:
 
         # Retrieve number of questions done, add one to it and configure heading
         questions_done = self.questions_done.get()
-        questions_done += 1
         self.questions_done.set(questions_done)
 
         questions_wanted = self.questions_wanted.get()
@@ -283,7 +294,7 @@ class Quiz:
         self.target_word.set(connected_answer)
 
         # Update heading and given word label. "Hide" result label
-        self.heading_label.config(text=f"Question {questions_done} of {questions_wanted}")
+        self.heading_label.config(text=f"Question {questions_done + 1} of {questions_wanted}")
         self.given_word_label.config(text=f"Given Word: {word_given}",
                                      font=("Arial", 14, "bold"))
         self.results_label.config(text=f"{'-' * 60}", bg="#C09CD2")
@@ -303,6 +314,16 @@ class Quiz:
         answer and then compare it with connected_answer, updates result,
         and adds result to stats list.
         """
+
+        self.to_stats_button.config(state=NORMAL)
+
+        #  Add one to the number of questions done and retrieve
+        #  the number of qns passed...
+        questions_done = self.questions_done.get()
+        questions_done += 1
+        self.questions_done.set(questions_done)
+
+        qns_passed = self.qns_passed.get()
 
         # way to get button name. Good for if buttons have been scrambled!
         word_chosen = self.word_button_ref[user_choice].cget('text')
@@ -325,7 +346,6 @@ class Quiz:
             current_streak += 1
             self.current_streak.set(current_streak)
 
-
         else:
             result_text = f"Oops {word_chosen} is not the right answer D:"
             result_bg = "#FF9992"
@@ -333,19 +353,29 @@ class Quiz:
             # resets current streak back to zero when user got it wrong
             self.current_streak.set(0)
 
-
         self.results_label.config(text=result_text, bg=result_bg)
-
 
         # enable stats & next buttons, disable word buttons
         self.next_button.config(state=NORMAL)
         self.to_stats_button.config(state=NORMAL)
 
         # check to see if quiz is over
-        questions_done = self.questions_done.get()
         questions_wanted = self.questions_wanted.get()
 
+        # Code for when the game ends!
         if questions_done == questions_wanted:
+
+            # work out success rate
+            success_rate = qns_passed / questions_done * 100
+            success_string = (f"Success Rate:"
+                              f"{qns_passed} / {questions_done}"
+                              f"({success_rate:.0f}%)")
+
+            # Configure 'end of quiz' labels / buttons
+            self.heading_label.config(text="End of Quiz")
+            self.given_word_label.config(text=success_string)
+            self.choose_label.config(text="Please click the stats "
+                                          "button for more info.")
             self.next_button.config(state=DISABLED, text="End of Quiz")
             self.end_quiz_button.config(text="Start Again", bg="#72BDFF")
 
@@ -358,7 +388,8 @@ class Quiz:
         Displays hints for playing game
         :return:
         """
-        DisplayHints(self)
+        questions_done = self.questions_done.get()
+        DisplayHints(self, questions_done)
 
 
     def close_quiz(self):
@@ -388,14 +419,18 @@ class DisplayHints:
     Displays hints for Connection Quiz
     """
 
-    def __init__(self, partner):
+    def __init__(self, partner, questions_done):
+        self.questions_done = questions_done
 
         # setup dialogue box and background color
         background = "#FAD7AC"
         self.hints_box = Toplevel()
 
-        # disable hints button
+        # disable hints, stats AND end quiz button to prevent users
+        # form leaving a dialogue open and then going back to the rounds dialogue
         partner.to_hints_button.config(state=DISABLED)
+        partner.end_quiz_button.config(state=DISABLED)
+        partner.to_stats_button.config(state=DISABLED)
 
         # If users press cross at top, closes hints and
         # 'releases' hints_button
@@ -439,11 +474,14 @@ class DisplayHints:
             item.config(bg=background)
 
     def close_hints(self, partner):
-        """
-        Closes hints dialogue box (and enables hints button)
-        """
-        # Put hints button back to normal...
+        # Put hints and end quiz back to normal...
         partner.to_hints_button.config(state=NORMAL)
+        partner.end_quiz_button.config(state=NORMAL)
+
+        # only enable stats button if we have played at least one q.
+        if self.questions_done >= 1:
+            partner.to_stats_button.config(state=NORMAL)
+
         self.hints_box.destroy()
 
 
@@ -454,12 +492,22 @@ class Stats:
 
     def __init__(self, partner, all_stats_info):
 
+        # disable buttons to prevent program crashing
+        partner.to_hints_button.config(state=DISABLED)
+        partner.end_quiz_button.config(state=DISABLED)
+        partner.to_stats_button.config(state=DISABLED)
+
         # Extract information from master list...
         qns_passed = all_stats_info[0]
         user_result = all_stats_info[1]
         high_results = all_stats_info[2]
         longest_streak = all_stats_info[3]
         current_streak = all_stats_info[4]
+
+
+        # longest_streak = self.longest_streak.get()
+        # longest_streak = max(current_streak)
+        # print(longest_streak)
 
         self.stats_box = Toplevel()
 
@@ -473,26 +521,27 @@ class Stats:
         self.stats_frame = Frame(self.stats_box, width=350, bg="#B1DDF0")
         self.stats_frame.grid()
 
-        print(user_result)
 
         # Math to populate Stats dialogue...
         questions_done = len(user_result)
-
-        print(questions_done)
-        print(user_result)
-
         success_rate = qns_passed / questions_done * 100
 
-        print(f"qns passed ={qns_passed}")
+        for user_result in user_result:
+            if user_result == "1":
+                current_streak += 1
+
+                if current_streak > longest_streak:
+                    longest_streak = current_streak
+
+            else:
+                current_streak = 0
 
 
         # Strings for Stats labels...
         success_string = f"Success Rate: {qns_passed} / {questions_done} "
         accuracy_string = f"Accuracy: {success_rate:.0f}%"
         current_streak_string = f"Current Streak: {current_streak}"
-
-        print(f"Current Streak :{current_streak}")
-
+        longest_streak_string = f"Longest Streak: {longest_streak}"
 
         # custom comment text and formatting
         if qns_passed == questions_done:
@@ -519,7 +568,9 @@ class Stats:
             [success_string, normal_font, bg, "W"],
             [accuracy_string, normal_font, bg, "W"],
             [comment_string, comment_font, bg, "W"],
-            [current_streak_string, normal_font, bg, "W"]
+            ["\n Question Stats", heading_font, bg, "W"],
+            [current_streak_string, normal_font, bg, ""],
+            [longest_streak_string, normal_font, bg, ""]
         ]
 
         stats_label_ref_list = []
@@ -548,6 +599,8 @@ class Stats:
             Closes stats dialogue box (and enables stats button)
             """
             # Put stats button back to normal...
+            partner.to_hints_button.config(state=NORMAL)
+            partner.end_quiz_button.config(state=NORMAL)
             partner.to_stats_button.config(state=NORMAL)
             self.stats_box.destroy()
 
