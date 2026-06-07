@@ -312,7 +312,7 @@ class Quiz:
         if word_chosen == answer:
             result_text = f"Success! {word_chosen} is the correct answer :D"
             result_bg = "#71EB5F"
-            self.all_result_list.append(1)
+            self.all_result_list.append("1")
 
             qns_passed = self.qns_passed.get()
             qns_passed += 1
@@ -321,7 +321,7 @@ class Quiz:
         else:
             result_text = f"Oops {word_chosen} is not the right answer D:"
             result_bg = "#FF9992"
-            self.all_result_list.append(0)
+            self.all_result_list.append("0")
 
         self.results_label.config(text=result_text, bg=result_bg)
 
@@ -446,9 +446,6 @@ class Stats:
         user_result = all_stats_info[1]
         high_results = all_stats_info[2]
 
-        print(qns_passed)
-        print(user_result)
-
         # sort user results to find high score...
         user_result.sort()
 
@@ -464,17 +461,11 @@ class Stats:
         self.stats_frame = Frame(self.stats_box, width=350, bg="#B1DDF0")
         self.stats_frame.grid()
 
-        print(user_result)
-
         # Math to populate Stats dialogue...
         questions_done = len(user_result)
 
-        print(questions_done)
-        print(user_result)
 
         success_rate = qns_passed / questions_done * 100
-
-        print(f"qns passed ={qns_passed}")
 
 
         # Strings for Stats labels...
@@ -488,8 +479,7 @@ class Stats:
             comment_colour = "#71EB5F"
 
         elif qns_passed == 0:
-            comment_string = {"Oops - You've lost every round! "
-                              "You might want to look at the hints!"}
+            comment_string = "Oops - You've lost every round! You might want to look at the hints!"
             comment_colour = "#FF9992"
 
         else:
