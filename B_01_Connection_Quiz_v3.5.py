@@ -203,7 +203,7 @@ class Quiz:
         # list for label details (text | font | background | row)
         quiz_labels_list = [
             ["Question # of #", ("Arial", 16, "bold"), "#C09CD2", 0 ],
-            ["The word given: #", body_font, "#D0CEE2", 1],
+            ["The word given: #", body_font, "#E1D5E7", 1],
             ["Choose the correct word. Good luck!", body_font, "#B4E8B4", 2],
             ["-" * 60, body_font, "#C09CD2", 3],
             ["Your answer was...(result)", body_font, "#C09CD2", 5]
@@ -240,6 +240,7 @@ class Quiz:
                                     padx=5, pady=5)
 
             self.word_button_ref.append(self.word_button)
+            self.word_button.config(bg="#E1D5E7")
 
         # Frame to hold hints and stats buttons
         self.hints_stats_frame = Frame(self.quiz_frame, bg="#C09CD2")
