@@ -180,10 +180,10 @@ class Quiz:
         self.questions_wanted = IntVar()
         self.questions_wanted.set(how_many)
 
+
         self.qns_passed = IntVar()
         self.longest_streak = IntVar()
         self.current_streak = IntVar()
-
 
         self.qn_words_list = []
         self.all_result_list = []
@@ -331,7 +331,6 @@ class Quiz:
         # retrieve connected_answer and compare with user choice to find round result
         answer = self.target_word.get()
 
-
         if word_chosen == answer:
             result_text = f"Success! {word_chosen} is the correct answer :D"
             result_bg = "#71EB5F"
@@ -340,11 +339,11 @@ class Quiz:
             qns_passed = self.qns_passed.get()
             qns_passed += 1
             self.qns_passed.set(qns_passed)
-
-            # Gets the current streak and adds 1 when user got it right
-            current_streak = self.current_streak.get()
-            current_streak += 1
-            self.current_streak.set(current_streak)
+            #
+            # # Gets the current streak and adds 1 when user got it right
+            # current_streak = self.current_streak.get()
+            # current_streak += 1
+            # self.current_streak.set(current_streak)
 
         else:
             result_text = f"Oops {word_chosen} is not the right answer D:"
@@ -526,10 +525,13 @@ class Stats:
         questions_done = len(user_result)
         success_rate = qns_passed / questions_done * 100
 
+        # Configure streaks
         for user_result in user_result:
             if user_result == "1":
                 current_streak += 1
 
+                # If current is greater than the longest set
+                # longest to be same as current
                 if current_streak > longest_streak:
                     longest_streak = current_streak
 
@@ -553,7 +555,7 @@ class Stats:
             comment_colour = "#FF9992"
 
         else:
-            comment_string = ""
+            comment_string = f"{'=' * 60}"
             comment_colour = "#B1DDF0"
 
         bg = "#B1DDF0"
@@ -569,8 +571,8 @@ class Stats:
             [accuracy_string, normal_font, bg, "W"],
             [comment_string, comment_font, bg, "W"],
             ["\n Question Stats", heading_font, bg, "W"],
-            [current_streak_string, normal_font, bg, ""],
-            [longest_streak_string, normal_font, bg, ""]
+            [current_streak_string, normal_font, bg, "W"],
+            [longest_streak_string, normal_font, bg, "W"]
         ]
 
         stats_label_ref_list = []
