@@ -541,11 +541,11 @@ class Stats:
             comment_colour = "#71EB5F"
 
         elif qns_passed == 0:
-            comment_string = "Oops - You've lost every round! You might want to look at the hints!"
+            comment_string = "Awe - You lost every round D: Look at the hints! it might help."
             comment_colour = "#FF9992"
 
         else:
-            comment_string = f"{'=' * 60}"
+            comment_string = f"{'=' * 30}"
             comment_colour = "#B1DDF0"
 
         bg = "#B1DDF0"
