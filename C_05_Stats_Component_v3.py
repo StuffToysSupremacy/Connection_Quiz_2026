@@ -54,25 +54,22 @@ class Quiz:
         # 0 = fail
 
         # Highest Result Test Data...
-        # self.all_result_list = [1,1,1,1,1]
-        # self.highest_result_list = [1,1,1,1,1]
+        # self.all_result_list = ["1","1","1","1","1"]
         # self.qns_passed.set(5)
         # self.longest_streak.set(5)
         # self.current_streak.set(5)
 
         # # Lowest Result Test Data...
         # self.all_result_list = [0,0,0,0,0]
-        # self.highest_result_list = [1,1,1,1,1]
         # self.qns_passed.set(0)
         # self.longest_streak.set(0)
         # self.current_streak.set(0)
-        #
+
         # # # Random Result Test Data...
-        self.all_result_list = ["1","0","1","1","1"]
-        self.highest_result_list = ["1","1","1","1","1"]
-        self.qns_passed.set(4)
-        self.longest_streak.set(3)
-        self.current_streak.set(3)
+        self.all_result_list = ["1","1","0","0","1"]
+        self.qns_passed.set(3)
+        self.longest_streak.set(2)
+        self.current_streak.set(1)
 
         self.quiz_box = Toplevel()
 
@@ -100,7 +97,7 @@ class Quiz:
         longest_streak = self.longest_streak.get()
         current_streak = self.current_streak.get()
         stats_bundle = [qns_passed, self.all_result_list,
-                        self.highest_result_list, longest_streak, current_streak]
+                        longest_streak, current_streak]
 
         Stats(self, stats_bundle)
 
@@ -115,9 +112,8 @@ class Stats:
         # Extract information from master list...
         qns_passed = all_stats_info[0]
         user_result = all_stats_info[1]
-        high_results = all_stats_info[2]
-        longest_streak = all_stats_info[3]
-        current_steak = all_stats_info[4]
+        longest_streak = all_stats_info[2]
+        current_steak = all_stats_info[3]
 
         self.stats_box = Toplevel()
 
@@ -136,20 +132,24 @@ class Stats:
 
         success_rate = qns_passed / questions_done * 100
 
-        print(user_result)
+        current = 0
+        longest = 0
 
-        if user_result == "1":
-            longest_streak =+ 1
-        else:
-            longest_streak = 0
+        for user_result in user_result:
+            if user_result == "1":
+                current += 1
+                longest = max(longest, current)
+            else:
+                current = 0
 
-        print(f" Longest St4reqak :{longest_streak}")
+        print(longest_streak)
+
 
         # Strings for Stats labels...
         success_string = f"Success Rate: {qns_passed} / {questions_done} "
         accuracy_string = f"Accuracy: {success_rate:.0f}%"
         current_streak_string = f"Current Streak: {current_steak}"
-
+        longest_streak_string = f"Longest Streak: {longest_streak}"
 
         # custom comment text and formatting
         if qns_passed == questions_done:
@@ -177,7 +177,8 @@ class Stats:
             [success_string, normal_font, bg, "W"],
             [accuracy_string, normal_font, bg, "W"],
             [comment_string, comment_font, bg, "W"],
-            [current_streak_string, normal_font, bg, "W"]
+            [current_streak_string, normal_font, bg, "W"],
+            [longest_streak_string, normal_font, bg, "W"]
         ]
 
         stats_label_ref_list = []
