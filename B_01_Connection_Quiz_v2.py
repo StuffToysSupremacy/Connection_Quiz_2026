@@ -167,6 +167,7 @@ class Quiz:
 
         # String Variables
         self.target_word = StringVar()
+        self.target_word = StringVar()
 
         # questions done - start with zero
         self.questions_done = IntVar()
@@ -251,7 +252,8 @@ class Quiz:
 
         # Retrieve next, stats and end button so that they can be configured
         self.next_button = control_ref_list[0]
-        self.stats_button = control_ref_list[2]
+        self.to_hints_button = control_ref_list[2]
+        self.to_stats_button = control_ref_list[2]
         self.end_quiz_button = control_ref_list[3]
 
         # Once interface has been created, invoke new
@@ -304,23 +306,26 @@ class Quiz:
 
         # retrieve connected_answer and compare with user choice to find round result
         answer = self.target_word.get()
-        self.all_answer_list.append(word_chosen)
+        self.all_result_list.append(word_chosen)
 
         if word_chosen == answer:
             result_text = f"Success! {word_chosen} is the correct answer :D"
             result_bg = "#71EB5F"
+            points_result = 1
             self.all_result_list.append(word_chosen)
 
         else:
             result_text = f"Oops {word_chosen} is not the right answer D:"
             result_bg = "#FF9992"
+            points_result = 0
             self.all_result_list.append(0)
 
         self.results_label.config(text=result_text, bg=result_bg)
 
+
         # enable stats & next buttons, disable word buttons
         self.next_button.config(state=NORMAL)
-        self.stats_button.config(state=NORMAL)
+        self.to_stats_button.config(state=NORMAL)
 
         # check to see if quiz is over
         questions_done = self.questions_done.get()
@@ -347,6 +352,7 @@ class Quiz:
         # quiz / allow new quiz to start
         root.deiconify()
         self.quiz_box.destroy()
+
 
 
 class DisplayHints:
@@ -377,10 +383,11 @@ class DisplayHints:
         self.hints_heading_label.grid(row=0)
 
         hints_text = ("The connection between the given word and "
-                      "the answer is that they are one word\n\n"
-                      "The answer can either be before the given word\n"
+                      "the answer is that they are one word.\n\n"
+                      "The answer can either be before the given word"
                       "or after the given word. \n\n"
-                      "____(given word)  or  (given word)____ \n\n"
+                      "E.g:\n"
+                      "          ____(given word)  or  (given word)____ \n\n"
                       "Good Luck!")
         self.hints_text_label = Label(self.hints_frame,
                                       text=hints_text, wraplength=350,
@@ -410,7 +417,6 @@ class DisplayHints:
         # Put hints button back to normal...
         partner.to_hints_button.config(state=NORMAL)
         self.hints_box.destroy()
-
 
 
 if __name__ == "__main__":

@@ -187,6 +187,7 @@ class Quiz:
 
         self.qn_words_list = []
         self.all_result_list = []
+        self.highest_result_list = []
 
         self.quiz_box = Toplevel()
 
@@ -250,7 +251,7 @@ class Quiz:
             [self.quiz_frame, "Next Question", "#FAF4AB", self.new_question, 21, 6, None],
             [self.hints_stats_frame, 'Hints',"#FAD7AC", self.to_hints, 10, 7, 0],
             [self.hints_stats_frame, "Stats","#B1DDF0", self.to_stats, 10, 7, 1],
-            [self.quiz_frame, "End Quiz", "#FAD9D5", self.close_quiz,21, 8, None],
+            [self.quiz_frame, "End", "#FAD9D5", self.close_quiz,21, 8, None],
         ]
 
         # create buttons and add to list
@@ -336,13 +337,17 @@ class Quiz:
             result_bg = "#71EB5F"
             self.all_result_list.append("1")
 
-
             qns_passed = self.qns_passed.get()
             qns_passed += 1
             self.qns_passed.set(qns_passed)
+            #
+            # # Gets the current streak and adds 1 when user got it right
+            # current_streak = self.current_streak.get()
+            # current_streak += 1
+            # self.current_streak.set(current_streak)
 
         else:
-            result_text = f"Oops -- {word_chosen} is not the right answer D:"
+            result_text = f"Oops {word_chosen} is not the right answer D:"
             result_bg = "#FF9992"
             self.all_result_list.append("0")
             # resets current streak back to zero when user got it wrong
@@ -404,7 +409,7 @@ class Quiz:
         longest_streak = self.longest_streak.get()
         current_streak = self.current_streak.get()
         stats_bundle = [qns_passed, self.all_result_list,
-                        longest_streak, current_streak]
+                        self.highest_result_list, longest_streak, current_streak]
 
         Stats(self, stats_bundle)
 
@@ -495,8 +500,14 @@ class Stats:
         # Extract information from master list...
         qns_passed = all_stats_info[0]
         user_result = all_stats_info[1]
-        longest_streak = all_stats_info[2]
-        current_streak = all_stats_info[3]
+        high_results = all_stats_info[2]
+        longest_streak = all_stats_info[3]
+        current_streak = all_stats_info[4]
+
+
+        # longest_streak = self.longest_streak.get()
+        # longest_streak = max(current_streak)
+        # print(longest_streak)
 
         self.stats_box = Toplevel()
 
@@ -541,7 +552,7 @@ class Stats:
             comment_colour = "#71EB5F"
 
         elif qns_passed == 0:
-            comment_string = "Awe - You lost every round D: Look at the hints! it might help."
+            comment_string = "Oops - You've lost every question! You might want to look at the hints!"
             comment_colour = "#FF9992"
 
         else:

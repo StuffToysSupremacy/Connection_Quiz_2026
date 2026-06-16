@@ -168,7 +168,7 @@ class Quiz:
 
         # List for buttons ( frame | text | bg | command | width | row | column )
         control_button_list = [
-            [self.quiz_frame, "Next Question", "#FAF4AB", "", 21, 5, None],
+            [self.quiz_frame, "Next Question", "#FAF4AB", "", 21, 6, None],
             [self.hints_stats_frame, 'Hints',"#FAD7AC", "", 10, 7, 0],
             [self.hints_stats_frame, "Stats","#B1DDF0", "", 10, 7, 1],
             [self.quiz_frame, "End", "#FAD9D5", self.close_quiz,21, 8, None],
@@ -206,7 +206,7 @@ class Quiz:
         num_of_question = self.num_of_question.get()
 
         # get the words for question and the answer
-        self.word_question_list, connected_answer = get_word_option()
+        self.word_question_list, word_given, connected_answer = get_word_option()
 
         # Set target word as connected answer (for later comparison)
         self.target_word.set(connected_answer)
@@ -227,7 +227,7 @@ class Quiz:
     def question_result(self, user_choice):
         """
         Retrieve which button was pushed (index 0-3), retrieves
-        connected answer and then compare it with answer, updates result,
+        answer and then compare it with connected_answer, updates result,
         and adds result to stats list.
         """
 

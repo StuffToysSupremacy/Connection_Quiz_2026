@@ -12,7 +12,7 @@ all_words.pop(0)
 four_words = []
 four_answer = []
 
-given_word = []
+word_given = []
 
 
 
@@ -25,13 +25,16 @@ while len(four_words) < 4:
         four_words.append(potential_words[4])
         four_answer.append(potential_words[0])
 
-        given_word = random.choice(four_words)
+        word_given = random.choice(four_words)
 
-word_index = four_words.index(given_word)
+word_index = four_words.index(word_given)
 connected_answer = four_answer[word_index]
 
 print(four_words)
 print(four_answer)
 
-print(f"The word = {given_word} \n" 
-      f"the answer = {connected_answer}")
+print("Word", word_given)
+print("Answer", connected_answer)
+
+# print(f"The word = {word_given} \n"
+#       f"the answer = {connected_answer}")

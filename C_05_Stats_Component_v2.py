@@ -62,10 +62,9 @@ class Quiz:
         # self.qns_passed.set(0)
 
         # # Random Result Test Data...
-        self.all_result_list = [1,0,1,0,1]
-        self.highest_result_list = [1,1,1,1,1]
-        self.qns_passed.set(3)
-
+        self.all_result_list = ["1","1","0","1","1"]
+        self.highest_result_list = ["1","1","1","1","1"]
+        self.qns_passed.set(4)
 
         self.quiz_box = Toplevel()
 
@@ -109,7 +108,7 @@ class Stats:
         high_results = all_stats_info[2]
 
         # sort user results to find high score...
-        user_result.sort()
+        # user_result.sort()
 
         self.stats_box = Toplevel()
 
@@ -123,27 +122,10 @@ class Stats:
         self.stats_frame = Frame(self.stats_box, width=350, bg="#B1DDF0")
         self.stats_frame.grid()
 
-        print(user_result)
-
         # Math to populate Stats dialogue...
         questions_done = len(user_result)
 
-        print(questions_done)
-        print(user_result)
-
         success_rate = qns_passed / questions_done * 100
-
-        # print(user_result)
-        #
-        # self.num_of_streak = 0
-        #
-        # if user_result == 1:
-        #     self.num_of_streak += 1
-        # # else:
-        # #     self.num_of_streak = 0
-        #
-        #
-        # print(self.num_of_streak)
 
         # Strings for Stats labels...
         success_string = f"Success Rate: {qns_passed} / {questions_done} "

@@ -50,52 +50,53 @@ class StartQuiz():
         self.entry_area_frame = Frame(self.start_frame, bg="#E1D5E7")
         self.entry_area_frame.grid(row=3)
 
-        self.num_question_entry = Entry(self.entry_area_frame, font=("Arial",20, "bold"),
-                                      width=26,justify='center')
+        self.num_question_entry = Entry(self.entry_area_frame, font=("Arial", 20, "bold"),
+                                        width=12)
         self.num_question_entry.grid(row=0, column=0, padx=10, pady=10)
 
         # Create start button...
         self.start_button = Button(self.entry_area_frame, font=("Arial", 16, "bold"),
-                                  fg="#FFFFFF", bg="#5555D4", text="Start", width=30,
-                                  command=self.check_questions)
+                                   fg="#FFFFFF", bg="#5555D4", text="Start", width=11,
+                                   command=self.check_questions)
 
-        self.start_button.grid(row=1)
+        self.start_button.grid(row=0, column=1)
+
 
     def check_questions(self):
-        """
-         Checks users have entered 1 or more question
-        """
+            """
+             Checks users have entered 1 or more question
+            """
 
-        # Retrieve how many questions wanted
-        questions_wanted = self.num_question_entry.get()
+            # Retrieve how many questions wanted
+            questions_wanted = self.num_question_entry.get()
 
-        # Reset label and entry box (for when users come back to home screen)
-        self.choose_label.config(fg="#009900", font=("Arial", 12, "bold"))
-        self.num_question_entry.config(bg="#FFFFFF")
+            # Reset label and entry box (for when users come back to home screen)
+            self.choose_label.config(fg="#009900", font=("Arial", 12, "bold"))
+            self.num_question_entry.config(bg="#FFFFFF")
 
-        error = "Oops - Please choose a whole number more than zero."
-        has_errors = "no"
+            error = "Oops - Please choose a whole number more than zero."
+            has_errors = "no"
 
-        # checks that # to do is a number above absolute zero
-        try:
-            questions_wanted = int(questions_wanted)
-            if questions_wanted > 0:
-                # Invoke Test Class (and take across number of rounds)
-                Test(questions_wanted)
-                # Hide root window (ie: hide question choice window)
-                root.withdraw()
-            else:
+            # checks that # to do is a number above absolute zero
+            try:
+                questions_wanted = int(questions_wanted)
+                if questions_wanted > 0:
+                    # Invoke Test Class (and take across number of rounds)
+                    Test(questions_wanted)
+                    # Hide root window (ie: hide question choice window)
+                    root.withdraw()
+                else:
+                    has_errors = "yes"
+
+            except ValueError:
                 has_errors = "yes"
 
-        except ValueError:
-            has_errors = "yes"
-
-        # display the error if necessary
-        if has_errors == "yes":
-            self.choose_label.config(text=error, fg="#990000",
-                                     font=("Arial", 10, "bold"))
-            self.num_question_entry.config(bg="#F4CCCC")
-            self.num_question_entry.delete(0, END)
+            # display the error if necessary
+            if has_errors == "yes":
+                self.choose_label.config(text=error, fg="#990000",
+                                         font=("Arial", 10, "bold"))
+                self.num_question_entry.config(bg="#F4CCCC")
+                self.num_question_entry.delete(0, END)
 
 
 class Test:

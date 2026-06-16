@@ -1,7 +1,7 @@
 from logging import root
 from tkinter import *
 
-class StartQuiz():
+class StartQuiz:
     """
     Initial Game inter-face (asks users how many questions they would like to do)
     """

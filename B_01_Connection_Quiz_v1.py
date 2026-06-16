@@ -304,7 +304,7 @@ class Quiz:
 
         # retrieve connected_answer and compare with user choice to find round result
         answer = self.target_word.get()
-        self.all_answer_list.append(word_chosen)
+        self.all_result_list.append(word_chosen)
 
         if word_chosen == answer:
             result_text = f"Success! {word_chosen} is the correct answer :D"
@@ -332,6 +332,9 @@ class Quiz:
 
         for item in self.word_button_ref:
             item.config(state=DISABLED)
+
+
+
 
     def close_quiz(self):
         # reshow root (ie: choose questions) and end current

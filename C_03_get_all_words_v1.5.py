@@ -25,6 +25,7 @@ while len( word_given) < 4:
 print(word_given)
 print(connected_answer)
 
-print(f"The words are {word_given} their connected answer is {connected_answer}")
+print(f"The words are {word_given} \n"
+      f"their connected answer is {connected_answer}")
 
 
