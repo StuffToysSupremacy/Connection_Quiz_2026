@@ -440,17 +440,21 @@ class DisplayHints:
                                          font=("Arial", 14, "bold"))
         self.hints_heading_label.grid(row=0)
 
-        hints_text = ("The connection between the given word and "
-                      "the answer is that they are one word.\n\n"
-                      "The answer can either be before the given word"
-                      "or after the given word. \n\n"
-                      "E.g:\n"
-                      "          ____(given word)  or  (given word)____ \n\n"
-                      "Good Luck!")
+        hints_text = ("In this quiz, there's a connection between the "
+                      "given word and the answer."
+                      "\n\n They can either be connected to become "
+                      "one word or into a compound noun."
+                      "\n\nThe answer can be placed before the given word or after the given word. "
+                      "\n\nEg:\n"
+                      "          ____(given word)  or  (given word)____ "
+                      "\n\nYour luck may be tested in this quiz as you might stumble upon "
+                      "on some questions that can be connected "
+                      "to more than one answer (eg: food chain and junk food)."
+                      "\n\nGood Luck!")
         self.hints_text_label = Label(self.hints_frame,
                                       text=hints_text, wraplength=350,
                                       justify="left")
-        self.hints_text_label.grid(row=1, pady=10)
+        self.hints_text_label.grid(row=1, padx=10)
 
         self.dismiss_button = Button(self.hints_frame,
                                      font=("Arial", 12, "bold"),
